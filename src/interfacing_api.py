@@ -1,6 +1,6 @@
 from dataclasses import dataclass
-from typing import Type
 from src.utils import is_valid_name
+from datetime import datetime
 
 
 @dataclass(repr=True)
@@ -33,6 +33,28 @@ class PlantFamily():
             self.metadata = metadata
         else:
             raise ValueError("Please enter a valid family name and/or valid metadata")
+
+
+@dataclass(repr=True)
+class Plant(PlantFamily):
+    """
+    Class for sepcific plants
+    """
+    name: str
+
+    def __init__(self, family_name: str, metadata: dict, name: str) -> None:
+        """
+        Args: 
+            family_name (str): Alphanumeric family-name
+            metadata (dict): metadata for the FamilyName (e.g. growthtime or other specifics for this plantfamily-type)
+            name(str): name of the plant
+
+        """
+        super().__init__(family_name, metadata=metadata)
+        if is_valid_name(name):
+            self.name = name
+        else:
+            raise ValueError("Please enter a valid plant name")
 
 
 @dataclass(repr=True)
@@ -92,3 +114,45 @@ class Location():
             self.climate = climate
         else:
             raise ValueError("Make sure you have entered valid datatypes for each parameter.")
+
+
+@dataclass(repr=True)
+class Tray:
+    """
+    Used to differentiate between different tray types 
+    and sizes
+    """
+    tray_type: str
+    footprint: float
+    capacity: int
+
+    def __init__(self, tray_type: str, footprint: float, capacity: int) -> None:
+        """
+        Type of tray that is used
+
+        Args:
+            tray_type (str): codename of the traytype, alphanumeric, without spaces
+            footprint (float): size in m^2 that the tray takes up
+            capacity (int): number of plants/cuttings tray can accomodate
+        """
+        if tray_type.isalnum() and footprint > 0 and capacity > 0:
+            self.tray_type = tray_type
+            self.footprint = footprint
+            self.capacity = capacity
+        else:
+            raise ValueError("Make sure that you have entered the correct datatypes for the parameters.")
+
+
+@dataclass(repr=True)
+class PlantEntry:
+    """
+    Class to make a new Plant Entry (for in the database)
+    Contains all data for a plant and its information
+    """
+    plant: Plant
+    location: Location
+    planting_time: datetime
+    tray_type: Tray
+
+    def __init__(self, plant: Plant, location: Location, planting_time: datetime, tray_type: Tray) -> None:
+        pass
