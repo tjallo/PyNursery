@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+from typing import List
+
+from PyQt5 import QtCore
 from src.utils import is_valid_name
 from datetime import datetime
 
@@ -141,6 +144,22 @@ class Tray:
             self.capacity = capacity
         else:
             raise ValueError("Make sure that you have entered the correct datatypes for the parameters.")
+
+    def to_qt_table(self) -> List[str]:
+        qt_table = []
+
+        qt_table.append(str(self.tray_type))
+        qt_table.append(str(self.capacity))
+        qt_table.append(str(self.footprint))
+
+        return qt_table
+
+    def headerData(self, section, orientation, role):
+        if role == QtCore.Qt.DisplayRole:
+            if orientation == QtCore.Qt.Horizontal:
+                return ["X", "Y", "Z"][section]
+            if orientation == QtCore.Qt.Vertical:
+                return QString("List ") + QString(section)
 
 
 @dataclass(repr=True)
