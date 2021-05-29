@@ -1,7 +1,7 @@
 import sqlite3
 from sqlite3.dbapi2 import Connection, Cursor
 from typing import List
-from src.plant_metadata import Climate, Location, Tray
+from src.plant_metadata import Climate, Location, Plant, PlantFamily, Tray
 
 
 def get_trays(db_path: str) -> List[Tray]:
@@ -64,6 +64,38 @@ def add_location(db_path: str, location: Location) -> None:
         curr.execute(query)
     except sqlite3.IntegrityError:
         raise ValueError("Error, tray already exists in database.")
+
+    conn.commit()
+    curr.close()
+    conn.close()
+
+
+def get_plant_families(db_path: str) -> List[PlantFamily]:
+    """
+    Returns list of plant_families that are in the database
+    """
+    families: List[PlantFamily] = []
+    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    cur: Cursor = conn.cursor()
+    for row in cur.execute('SELECT family_name, meta_data FROM plant_families'):
+        families.append(PlantFamily(row[0], dict(eval(row[1]))))
+
+    cur.close()
+    conn.close()
+    return families
+
+def add_plant_family(db_path: str, plant_family: PlantFamily):
+    """
+    Add plant_family to plant_families in the database
+    """
+    query=f'INSERT INTO plant_families (family_name, meta_data) VALUES ("{plant_family.family_name}", "{str(plant_family.metadata)}")'
+
+    conn: Connection=sqlite3.connect(f'{db_path}\\company_data.db')
+    curr: Cursor=conn.cursor()
+    try:
+        curr.execute(query)
+    except sqlite3.IntegrityError:
+        raise ValueError("Error, plant_family already exists in database.")
 
     conn.commit()
     curr.close()
