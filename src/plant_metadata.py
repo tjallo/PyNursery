@@ -154,13 +154,6 @@ class Tray:
 
         return qt_table
 
-    def headerData(self, section, orientation, role):
-        if role == QtCore.Qt.DisplayRole:
-            if orientation == QtCore.Qt.Horizontal:
-                return ["X", "Y", "Z"][section]
-            if orientation == QtCore.Qt.Vertical:
-                return QString("List ") + QString(section)
-
 
 @dataclass(repr=True)
 class PlantEntry:
