@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app flat clipped-left class="primary">
 
-    <v-toolbar-title>Page title</v-toolbar-title>
+    <v-toolbar-title>PyNursery</v-toolbar-title>
 
     <v-spacer></v-spacer>
 
