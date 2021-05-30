@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from routes import locations, plant_families, plants, tray_types
 
@@ -8,6 +9,19 @@ app.include_router(locations.router)
 app.include_router(plant_families.router)
 app.include_router(plants.router)
 app.include_router(tray_types.router)
+
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/")
