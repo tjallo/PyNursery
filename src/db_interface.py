@@ -159,7 +159,7 @@ def add_plant(db_path: str, plant: Plant) -> None:
         db_path (str): string of the location of the DB folder
         plant (Plant): plant that needs to be added to the database
     """
-    query = f'INSERT INTO plant_families (name, family_name, metadata) VALUES ("{plant.name}", "{plant.family_name}", "{str(plant.metadata)}")'
+    query = f'INSERT INTO plants (name, family_name, metadata) VALUES ("{plant.name}", "{plant.family_name}", "{str(plant.metadata)}")'
 
     conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
     curr: Cursor = conn.cursor()

@@ -31,8 +31,8 @@ class PlantFamily():
         Returns:
             None
         """
-        if is_valid_name(family_name) and type(metadata) == dict:
-            self.family_name = family_name
+        if type(metadata) == dict:
+            self.family_name = family_name.strip()
             self.metadata = metadata
         else:
             raise ValueError("Please enter a valid family name and/or valid metadata")
