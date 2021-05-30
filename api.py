@@ -1,11 +1,14 @@
 from fastapi import FastAPI
 
-from routes import locations, plant_families
+from routes import locations, plant_families, plants, tray_types
 
 app = FastAPI()
 
 app.include_router(locations.router)
 app.include_router(plant_families.router)
+app.include_router(plants.router)
+app.include_router(tray_types.router)
+
 
 @app.get("/")
 async def root():
