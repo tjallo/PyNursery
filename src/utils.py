@@ -1,4 +1,5 @@
 import re
+import json
 
 
 def is_valid_name(name: str) -> bool:
@@ -13,3 +14,9 @@ def is_valid_name(name: str) -> bool:
     """
     pattern = '^[a-zA-Z0-9 ]*$'
     return re.match(pattern, name)
+
+def get_db_path() -> str:
+    with open('./config/settings.json', 'r') as file:
+        config = json.load(file)
+        return config['DB-PATH']
+
