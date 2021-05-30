@@ -14,7 +14,23 @@ const routes = [
     path: '/locations',
     name: 'Locations',
     component: () => import('../views/Locations.vue')
-  }
+  },
+  {
+    path: '/plant_families',
+    name: 'PlantFamilies',
+    component: () => import('../views/PlantFamilies.vue')
+  },
+  {
+    path: '/plants',
+    name: 'Plants',
+    component: () => import('../views/Plants.vue')
+  },
+  {
+    path: '/trays',
+    name: 'Trays',
+    component: () => import('../views/Trays.vue')
+  },
+ 
 ]
 
 const router = new VueRouter({

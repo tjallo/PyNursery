@@ -1,13 +1,12 @@
 <template>
-  <div class="locations">
-    <h1>Locatioasdns</h1>
+  <div>
+    <h1>Plants</h1>
   </div>
 </template>
 
-
 <script>
 export default {
-  name: "Locations",
+  name: "Plants",
 
   components: {},
 };
