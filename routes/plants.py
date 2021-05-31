@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter, status
-from src.db_interface import add_plant, get_plants
+from src.db_interface import add_plant, delete_plant, get_plants
 from src.plant_metadata import Plant
 from src.utils import get_db_path
 from pydantic import BaseModel
@@ -33,7 +33,7 @@ class PlantsModel(BaseModel):
     """
     Class to supply documentation for the api
     """
-    plants: List[Plant]
+    plants: List[PlantModel]
 
 
 @router.get('/all')
@@ -57,8 +57,13 @@ async def post_plant(plant: PlantModel):
 
 
 @router.post('/delete')
-async def post_delete_plant(plants: Plant):
+async def post_delete_plant(plants: PlantsModel):
     """
     Delete list of plants from the database
     """
-    print(plants)
+    try:
+        for plant in plants.plants:
+            delete_plant(get_db_path(), plant.toPlant())
+        return status.HTTP_201_CREATED
+    except:
+        return status.HTTP_405_METHOD_NOT_ALLOWED
