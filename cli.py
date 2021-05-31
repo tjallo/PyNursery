@@ -1,21 +1,16 @@
 from src.utils import get_db_path
-from src.db_interface import delete_location
-from src.plant_metadata import Location, Climate
+from src.db_interface import add_plant, delete_location, delete_plant
+from src.plant_metadata import Location, Climate, Plant
 
 
-l1 = Location('New Field', 34, Climate(0))
-delete_location(get_db_path(), l1)
+p1 = Plant('test', {}, "je moeder")
+p2 = Plant('test2', {}, "123je moeder")
+p3 = Plant('test3', {}, "345je moeder")
 
-asdf = {
-    "family_names": [
-        {
-            "family_name": "001"
-        },
-        {
-            "family_name": "002"
-        },
-        {
-            "family_name": "003"
-        }
-    ]
-}
+
+# add_plant(get_db_path(), p1)
+# add_plant(get_db_path(), p2)
+# add_plant(get_db_path(), p3)
+
+
+delete_plant(get_db_path(), p1)
