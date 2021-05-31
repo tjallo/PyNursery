@@ -29,4 +29,4 @@ async def root():
     """
     Returns Hello World, used as a check if the system is online
     """
-    return {"message": "Hello World"}
+    return {"message": "Hello World, I am online and functioning!"}

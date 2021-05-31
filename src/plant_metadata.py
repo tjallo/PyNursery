@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List
 
 from PyQt5 import QtCore
+from starlette.routing import Mount
 from src.utils import is_valid_name
 from datetime import datetime
 
@@ -145,19 +146,70 @@ class Tray:
         else:
             raise ValueError("Make sure that you have entered the correct datatypes for the parameters.")
 
-    
-
 
 @dataclass(repr=True)
-class PlantEntry:
+class PlantBatch:
     """
-    Class to make a new Plant Entry (for in the database)
-    Contains all data for a plant and its information
+    Class to make a new PlantBatch (for in the database)
+    The PlantBatch class is for actual Plants that are in your company
+    Unlike Plant and PlantFamilies it isn't a database of plants that could be in your company
+    Contains all data for a plant and its metadata
     """
     plant: Plant
     location: Location
     planting_time: datetime
+    n_tray: int
     tray_type: Tray
+    n_plants: int
+    area_needed: float
 
-    def __init__(self, plant: Plant, location: Location, planting_time: datetime, tray_type: Tray) -> None:
-        pass
+    def __init__(self, plant: Plant, location: Location, tray_type: Tray, n_trays: int, planting_time: datetime = datetime.now()) -> None:
+        """
+        Constructor
+
+        Args:
+            plant (Plant): plant that has been planted
+            location (Location): the location the plant is at
+            tray_type (Tray): the type of tray that is used
+            n_tray (int): The number of trays that have been placed at this location
+            planting_time (datetime): the time at which the trays were first placed
+        """
+        if n_trays > 0 and (type(planting_time) == datetime):
+            self.plant = plant
+            self.location = location
+            self.tray_type = tray_type
+            self.n_tray = n_trays
+            self.planting_time = planting_time
+            self.n_plants = self.tray_type.capacity * n_trays
+            self.area_needed = self.tray_type.footprint * n_trays
+
+        else:
+            raise ValueError("Please enter valid arguments for the parameters")
+
+    def get_area(self) -> float:
+        """
+        Returns the area (in m^2) that this batch of plants takes up
+        """
+        return self.area_needed
+
+    def get_plant_count(self) -> int:
+        """
+        Returns the amount of plants that are in this batch
+        """
+        return self.n_plants
+
+    def get_age(self) -> int:
+        """
+        Returns age (in days) of the batch
+        """
+        return (datetime.now() - self.planting_time).days
+
+    def get_plant_date(self) -> str:
+        """
+        Returns formatted (dd-mm-yyyy) string of the planting date of the batch
+        """
+        day: int = self.planting_time.day
+        month: int = self.planting_time.month
+        year: int = self.planting_time.year
+
+        return f"{day}-{month}-{year}"
