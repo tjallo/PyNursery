@@ -1,16 +1,11 @@
 from src.utils import get_db_path
-from src.db_interface import add_plant, delete_location, delete_plant
-from src.plant_metadata import Location, Climate, Plant
+from src.db_interface import add_plant, add_tray, delete_location, delete_plant, delete_tray
+from src.plant_metadata import Location, Climate, Plant, Tray
 
 
-p1 = Plant('test', {}, "je moeder")
-p2 = Plant('test2', {}, "123je moeder")
-p3 = Plant('test3', {}, "345je moeder")
+# tray: Tray = Tray('test2', 0.4 * 0.8, 40)
 
 
-# add_plant(get_db_path(), p1)
-# add_plant(get_db_path(), p2)
-# add_plant(get_db_path(), p3)
+# add_tray(get_db_path(), tray)
 
-
-delete_plant(get_db_path(), p1)
+# delete_tray(get_db_path(), tray)

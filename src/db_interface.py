@@ -47,6 +47,30 @@ def add_tray(db_path: str, tray: Tray) -> None:
     conn.close()
 
 
+def delete_tray(db_path: str, tray: Tray):
+    """
+    Remove specific tray from database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+        location (Location): location to be removed 
+    """
+    # Since the names need to be unique in the SQL Databse
+    # we can filter on the specific name
+    query = f"DELETE FROM tray_types WHERE tray_type='{tray.tray_type}'"
+
+    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    curr: Cursor = conn.cursor()
+    try:
+        curr.execute(query)
+    except sqlite3.IntegrityError:
+        raise ValueError("There was an error")
+
+    conn.commit()
+    curr.close()
+    conn.close()
+
+
 def get_locations(db_path: str) -> List[Location]:
     """
     Returns list of locations that are in the database
