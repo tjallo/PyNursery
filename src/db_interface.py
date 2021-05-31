@@ -219,3 +219,69 @@ def add_plant(db_path: str, plant: Plant) -> None:
     conn.commit()
     curr.close()
     conn.close()
+
+
+def add_plant(db_path: str, plant: Plant) -> None:
+    """
+    Add plant to plants in the database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+        plant (Plant): plant that needs to be added to the database
+    """
+    query = f'INSERT INTO plants (name, family_name, metadata) VALUES ("{str(plant.name)}", "{str(plant.family_name)}", "{str(plant.metadata)}")'
+
+    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    curr: Cursor = conn.cursor()
+    try:
+        curr.execute(query)
+    except sqlite3.IntegrityError:
+        raise ValueError("Error, plant already exists in database.")
+
+    conn.commit()
+    curr.close()
+    conn.close()
+
+
+def delete_plant(db_path: str, plant: Plant):
+    """
+    Delete plant from the database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+        plant (Plant): plant to be removed 
+    """
+    # Since the names need to be unique in the SQL Databse
+    # we can filter on the specific name
+    query = f"DELETE FROM plants WHERE name='{plant.name}'"
+
+    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    curr: Cursor = conn.cursor()
+    try:
+        curr.execute(query)
+    except sqlite3.IntegrityError:
+        raise ValueError("There was an error")
+
+    conn.commit()
+    curr.close()
+    conn.close()
+
+
+def get_plants(db_path: str) -> List[Plant]:
+    """
+    Returns list of plants that are in the database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+    Returns:
+        plants (List[Plant]): list of plants in database
+    """
+    plants: List[Plant] = []
+    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    cur: Cursor = conn.cursor()
+    for row in cur.execute('SELECT family_name, metadata, name FROM plants'):
+        plants.append(Plant(row[0], dict(eval(row[1])), row[2]))
+
+    cur.close()
+    conn.close()
+    return plants

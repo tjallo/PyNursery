@@ -123,7 +123,6 @@ export default {
           location.reload();
         });
     },
-    deleteAll() {},
     addItem() {
       this.dialogAdd = true;
     },
