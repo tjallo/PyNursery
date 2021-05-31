@@ -213,3 +213,9 @@ class PlantBatch:
         year: int = self.planting_time.year
 
         return f"{day}-{month}-{year}"
+
+    def get_epoch(self) -> int:
+        """
+        Returns unix epoch (in seconds) of the timestamp
+        """
+        return self.planting_time.second 
