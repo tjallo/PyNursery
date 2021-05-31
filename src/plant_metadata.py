@@ -145,14 +145,7 @@ class Tray:
         else:
             raise ValueError("Make sure that you have entered the correct datatypes for the parameters.")
 
-    def to_qt_table(self) -> List[str]:
-        qt_table = []
-
-        qt_table.append(str(self.tray_type))
-        qt_table.append(str(self.capacity))
-        qt_table.append(str(self.footprint))
-
-        return qt_table
+    
 
 
 @dataclass(repr=True)
