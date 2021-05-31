@@ -155,6 +155,30 @@ def add_plant_family(db_path: str, plant_family: PlantFamily) -> None:
     conn.close()
 
 
+def delete_plant_family(db_path: str, plant_family: PlantFamily):
+    """
+    Delete plant_family from the database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+        plant_family (PlantFamily): location to be removed 
+    """
+    # Since the names need to be unique in the SQL Databse
+    # we can filter on the specific name
+    query = f"DELETE FROM plant_families WHERE family_name='{plant_family.family_name}'"
+
+    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    curr: Cursor = conn.cursor()
+    try:
+        curr.execute(query)
+    except sqlite3.IntegrityError:
+        raise ValueError("There was an error")
+
+    conn.commit()
+    curr.close()
+    conn.close()
+
+
 def get_plants(db_path: str) -> List[Plant]:
     """
     Returns list of plants that are in the database

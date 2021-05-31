@@ -3,7 +3,7 @@ from fastapi import APIRouter, status
 from src.plant_metadata import Location, Climate
 from src.db_interface import add_location, delete_location, get_locations
 from src.utils import get_db_path
-from pydantic import BaseModel, parse
+from pydantic import BaseModel
 from traceback import print_exc
 
 
@@ -15,18 +15,25 @@ router = APIRouter(
 
 
 class LocationModel(BaseModel):
+    """
+    Location model for the API documentation
+    """
     name: str
     area: float
     climate_type: int
 
-class LocationsModel(BaseModel):
-    locations: List[LocationModel]
+    def toLocation(self) -> Location:
+        """
+        Parses JSON-Like LocationModel object to Loaction object
+        """
+        return Location(str(self.name), float(self.area), Climate(int(self.climate_type)))
 
-def parse_location_model(location: LocationModel) -> Location:
+
+class LocationsModel(BaseModel):
     """
-    Parses JSON-like LocationModel object to Location object
+    List of LoactionModels for the API documentation
     """
-    return Location(str(location.name), float(location.area), Climate(int(location.climate_type)))
+    locations: List[LocationModel]
 
 
 @router.get('/all')
@@ -43,8 +50,7 @@ async def post_location(location: LocationModel):
     Adds an location to the database
     """
     try:
-        l1 = parse_location_model(location)
-        add_location(get_db_path(), l1)
+        add_location(get_db_path(), location.toLocation())
         return status.HTTP_201_CREATED
     except:
         print_exc()
@@ -53,14 +59,13 @@ async def post_location(location: LocationModel):
 
 @router.post('/delete')
 async def post_delete_locations(locations: LocationsModel):
-    print(locations)
+    """
+    Deletes supplies locations from the database
+    """
     try:
         for location in locations.locations:
-            l1 = parse_location_model(location)
-            delete_location(get_db_path(), l1)
+            delete_location(get_db_path(), location.toLocation())
         return status.HTTP_201_CREATED
     except:
         print_exc()
         return status.HTTP_405_METHOD_NOT_ALLOWED
-    
-

@@ -32,3 +32,10 @@ export default {
   components: {},
 };
 </script>
+
+
+<style scoped>
+.blueText {
+  color: #bbdefb;
+}
+</style>
