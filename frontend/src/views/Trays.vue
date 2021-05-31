@@ -140,7 +140,22 @@ export default {
           location.reload();
         });
     },
-    confirmDelete() {},
+    confirmDelete() {
+      let query = {
+        trays: [],
+      };
+
+      this.selected.forEach((element) => {
+        query.trays.push(element);
+      });
+
+      axios
+        .post("http://localhost:8000/tray_types/delete", query)
+        .then((response) => {
+          console.log(response);
+          location.reload();
+        });
+    },
   },
   mounted() {
     axios
