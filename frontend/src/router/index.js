@@ -30,7 +30,12 @@ const routes = [
     name: 'Trays',
     component: () => import('../views/Trays.vue')
   },
- 
+  {
+    path: '/plant_batch',
+    name: 'Plant Batch',
+    component: () => import('../views/PlantBatch.vue')
+  },
+
 ]
 
 const router = new VueRouter({

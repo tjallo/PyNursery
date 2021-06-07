@@ -20,6 +20,7 @@ export default {
   data: () => ({
     items: [
       ["Home", "mdi-home", "/"],
+      ["Plant Batches", "mdi-person", "/plant_batch"],
       ["Locations", "mdi-barn", "/locations"],
       ["Plant Families", "mdi-nature-people", "/plant_families"],
       ["Plants", "mdi-sprout-outline", "/plants"],
