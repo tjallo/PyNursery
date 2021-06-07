@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes import locations, plant_families, plants, tray_types
+from routes import locations, plant_families, plants, tray_types, plant_batch
 
 app = FastAPI()
 
@@ -9,6 +9,7 @@ app.include_router(locations.router)
 app.include_router(plant_families.router)
 app.include_router(plants.router)
 app.include_router(tray_types.router)
+app.include_router(plant_batch.router)
 
 origins = [
     "http://localhost",

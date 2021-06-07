@@ -1,7 +1,11 @@
+import ast
+from datetime import datetime
+from json import loads
 import sqlite3
 from sqlite3.dbapi2 import Connection, Cursor
 from typing import List
-from src.plant_metadata import Climate, Location, Plant, PlantFamily, Tray
+from src.plant_metadata import Climate, Location, Plant, PlantFamily, Tray, PlantBatch
+from ast import literal_eval
 
 
 def get_trays(db_path: str) -> List[Tray]:
@@ -225,28 +229,6 @@ def get_plants(db_path: str) -> List[Plant]:
 
 def add_plant(db_path: str, plant: Plant) -> None:
     """
-    Add plant to plant in the database
-
-    Args:
-        db_path (str): string of the location of the DB folder
-        plant (Plant): plant that needs to be added to the database
-    """
-    query = f'INSERT INTO plants (name, family_name, metadata) VALUES ("{plant.name}", "{plant.family_name}", "{str(plant.metadata)}")'
-
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
-    curr: Cursor = conn.cursor()
-    try:
-        curr.execute(query)
-    except sqlite3.IntegrityError:
-        raise ValueError("Error, plant_family already exists in database.")
-
-    conn.commit()
-    curr.close()
-    conn.close()
-
-
-def add_plant(db_path: str, plant: Plant) -> None:
-    """
     Add plant to plants in the database
 
     Args:
@@ -267,7 +249,7 @@ def add_plant(db_path: str, plant: Plant) -> None:
     conn.close()
 
 
-def delete_plant(db_path: str, plant: Plant):
+def delete_plant(db_path: str, plant: Plant) -> None:
     """
     Delete plant from the database
 
@@ -309,3 +291,105 @@ def get_plants(db_path: str) -> List[Plant]:
     cur.close()
     conn.close()
     return plants
+
+
+def parse_batch_db_entry(row) -> PlantBatch:
+    """
+    Parses database row of plant batch
+
+    Returns PlantBatch Object
+    """
+
+    # We need to reassign to a new variable since dicts are immutable
+    row0 = ast.literal_eval(row[0])
+    row1 = ast.literal_eval(row[1])
+    row2 = ast.literal_eval(row[2])
+
+    plant: Plant = Plant(name=row0['name'], family_name=row0['family_name'], metadata=row0['metadata'])
+    location: Location = Location(row1['name'], row1['area'], Climate(row1['climate_type']))
+    tray: Tray = Tray(row2['tray_type'], row2['footprint'], row2['capacity'])
+    n_trays: int = int(row[3])
+    planting_time: datetime = datetime.fromisoformat(row[4])
+
+    batch: PlantBatch = PlantBatch(plant, location, tray, n_trays, planting_time)
+
+    return batch
+
+
+def add_plant_batch(db_path: str, plant_batch: PlantBatch) -> None:
+    """
+    Add plant batch to the database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+        plant_batch (PlantBatch): plant that needs to be added to the database
+    """
+    plant: dict = {
+        'name': plant_batch.plant.name,
+        'family_name': plant_batch.plant.family_name,
+        'metadata': plant_batch.plant.metadata
+    }
+
+    location: dict = {
+        'name': plant_batch.location.name,
+        'climate_type': plant_batch.location.climate.climate_type,
+        'area': plant_batch.location.area
+    }
+
+    tray: dict = {
+        'tray_type': plant_batch.tray_type.tray_type,
+        'capacity': plant_batch.tray_type.capacity,
+        'footprint': plant_batch.tray_type.footprint
+    }
+
+    query = f'INSERT INTO batches (Plant, Location, Tray, n_trays, planting_time) VALUES ("{plant}", "{location}", "{tray}", {plant_batch.n_tray}, "{plant_batch.planting_time.isoformat()}")'
+
+    conn: Connection = sqlite3.connect(f'{db_path}\\batches.db')
+    curr: Cursor = conn.cursor()
+    try:
+        curr.execute(query)
+    except sqlite3.IntegrityError:
+        raise ValueError("Error occured")
+
+    conn.commit()
+    curr.close()
+    conn.close()
+
+
+def delete_plant_batch(db_path: str, plant_batch: PlantBatch) -> None:
+    """
+    Delete plant batch from the database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+        plant_batch (PlantBatch): plant batch to be removed 
+    """
+    pass
+
+
+def get_plant_batches(db_path: str) -> List[PlantBatch]:
+    """
+    Returns list of plant_batches that are in the database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+    Returns:
+        plant_batches (List[PlantBatch]): list of plant batches in database
+    """
+    plant_batches: List[PlantBatch] = []
+
+    conn: Connection = sqlite3.connect(f'{db_path}\\batches.db')
+    cur: Cursor = conn.cursor()
+
+    for row in cur.execute('SELECT Plant, Location, Tray, n_trays, planting_time FROM batches'):
+        # print('\n\n')
+        # for i in row:
+        # print(f"{type(i)}: {i}")
+
+        batch: PlantBatch = parse_batch_db_entry(row)
+
+        plant_batches.append(batch)
+
+    cur.close()
+    conn.close()
+    return plant_batches

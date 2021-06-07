@@ -2,7 +2,7 @@
   <div class="plants">
     <v-data-table
       show-select
-      item-key="family_name"
+      item-key="name"
       v-model="selected"
       :headers="headers"
       :items="plants"
