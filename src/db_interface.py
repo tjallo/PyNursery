@@ -316,14 +316,7 @@ def parse_batch_db_entry(row) -> PlantBatch:
     return batch
 
 
-def add_plant_batch(db_path: str, plant_batch: PlantBatch) -> None:
-    """
-    Add plant batch to the database
-
-    Args:
-        db_path (str): string of the location of the DB folder
-        plant_batch (PlantBatch): plant that needs to be added to the database
-    """
+def parse_plant_location_tray_to_dict(plant_batch: PlantBatch):
     plant: dict = {
         'name': plant_batch.plant.name,
         'family_name': plant_batch.plant.family_name,
@@ -341,6 +334,19 @@ def add_plant_batch(db_path: str, plant_batch: PlantBatch) -> None:
         'capacity': plant_batch.tray_type.capacity,
         'footprint': plant_batch.tray_type.footprint
     }
+
+    return plant, location, tray
+
+
+def add_plant_batch(db_path: str, plant_batch: PlantBatch) -> None:
+    """
+    Add plant batch to the database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+        plant_batch (PlantBatch): plant that needs to be added to the database
+    """
+    plant, location, tray = parse_plant_location_tray_to_dict(plant_batch)
 
     query = f'INSERT INTO batches (Plant, Location, Tray, n_trays, planting_time) VALUES ("{plant}", "{location}", "{tray}", {plant_batch.n_tray}, "{plant_batch.planting_time.isoformat()}")'
 
@@ -364,7 +370,18 @@ def delete_plant_batch(db_path: str, plant_batch: PlantBatch) -> None:
         db_path (str): string of the location of the DB folder
         plant_batch (PlantBatch): plant batch to be removed 
     """
-    pass
+    plant, location, tray = parse_plant_location_tray_to_dict(plant_batch)
+
+    conn: Connection = sqlite3.connect(f'{db_path}\\batches.db')
+    curr: Cursor = conn.cursor()
+    try:
+        curr.execute(f"DELETE FROM batches WHERE (Plant=? AND Tray=? AND Location=? AND planting_time=?)", (str(plant), str(tray), str(location), plant_batch.planting_time.isoformat(),))
+    except sqlite3.IntegrityError:
+        raise ValueError("There was an error")
+
+    conn.commit()
+    curr.close()
+    conn.close()
 
 
 def get_plant_batches(db_path: str) -> List[PlantBatch]:

@@ -1,6 +1,6 @@
 from datetime import datetime
 from src.utils import get_db_path
-from src.db_interface import add_plant, add_tray, delete_location, delete_plant, delete_tray, add_plant_batch, get_plant_batches
+from src.db_interface import add_plant, add_tray, delete_location, delete_plant, delete_plant_batch, delete_tray, add_plant_batch, get_plant_batches
 from src.plant_metadata import Location, Climate, Plant, PlantBatch, Tray
 
 
@@ -11,6 +11,9 @@ plant: Plant = Plant("Test", {}, "Je moeder")
 plant_batch: PlantBatch = PlantBatch(plant, location, tray, 30)
 
 
-add_plant_batch(get_db_path(), plant_batch)
+plantss = get_plant_batches(get_db_path())
+
+for p in plantss:
+    delete_plant_batch(get_db_path(), p)
 
 print(get_plant_batches(get_db_path()))
