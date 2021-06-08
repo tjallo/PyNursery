@@ -10,8 +10,6 @@
     >
     </v-data-table>
 
-    {{ form }}
-
     <v-col class="text-right">
       <v-btn
         @click="deleteItem()"

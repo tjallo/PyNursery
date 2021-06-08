@@ -26,7 +26,7 @@ def locations_stats() -> StatModel:
     """
     try:
         count = get_location_stats(get_db_path())
-        model = StatModel(name="Location", count=count)
+        model = StatModel(name="Locations", count=count)
         return model
     except:
         return status.HTTP_416_REQUESTED_RANGE_NOT_SATISFIABLE
