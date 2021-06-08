@@ -92,6 +92,11 @@ routes\\plants
 .. automodule:: plants
    :members:
 
+routes\\statistics
+=====================================
+.. automodule:: statistics
+   :members:
+
 routes\\tray_types
 =====================================
 .. automodule:: tray_types

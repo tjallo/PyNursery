@@ -410,3 +410,91 @@ def get_plant_batches(db_path: str) -> List[PlantBatch]:
     cur.close()
     conn.close()
     return plant_batches
+
+
+def get_db_count(db_path: str, db_name: str, db_table: str) -> int:
+    """
+    Returns the count of the number of elements in a table from a certain DB
+
+    Args:
+        db_path (str): path of the database
+        db_name (str): name of the database you want to acces (e.g. 'company_data.db')
+        db_table (str): name of the table you want the count from
+    Returns:
+        db_count (int): Number of rows in the table
+
+    """
+    conn: Connection = sqlite3.connect(f'{db_path}\\{db_name}')
+    cur: Cursor = conn.cursor()
+
+    try:
+        fetch: List = cur.execute(f'SELECT COUNT(*) FROM {db_table}').fetchall()
+        count: int = int(fetch[0][0])
+    except:
+        count: int = 0
+
+    cur.close()
+    conn.close()
+
+    return count
+
+
+def get_location_stats(db_path: str) -> int:
+    """
+    Returns the number of entries in the location database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+    Returns:
+        n_locations (int): number of location entries in the database
+    """
+
+    return get_db_count(db_path, 'company_data.db', 'locations')
+
+
+def get_plant_batch_stats(db_path: str) -> int:
+    """
+    Returns the number of entries in the plant_batch database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+    Returns:
+        n_plant_batches (int): number of plant_batch entries in the database
+    """
+    return get_db_count(db_path, 'batches.db', 'batches')
+
+
+def get_plant_family_stats(db_path: str) -> int:
+    """
+    Returns the number of entries in the plant_family database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+    Returns:
+        n_plant_families (int): number of plant family entries in the database
+    """
+    return get_db_count(db_path, 'company_data.db', 'plant_families')
+
+
+def get_plant_stats(db_path: str) -> int:
+    """
+    Returns the number of entries in the plant database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+    Returns:
+        n_plants (int): number of plant entries in the database
+    """
+    return get_db_count(db_path, 'company_data.db', 'plants')
+
+
+def get_tray_type_stats(db_path: str) -> int:
+    """
+    Returns the number of entries in the tray_type database
+
+    Args:
+        db_path (str): string of the location of the DB folder
+    Returns:
+        n_tray_types (int): number of Tray_type entries in the database
+    """
+    return get_db_count(db_path, 'company_data.db', 'tray_types')
