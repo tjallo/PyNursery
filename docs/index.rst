@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to PyNursery's documentation!
+PyNursery's Developer documentation
 =====================================
 PyNursery was deviced for the final assignment of Introduction to Artificial Intelligence - B
 
