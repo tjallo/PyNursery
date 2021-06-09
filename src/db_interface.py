@@ -4,6 +4,7 @@ import sqlite3
 from sqlite3.dbapi2 import Connection, Cursor
 from typing import List
 from src.plant_metadata import Climate, Location, Plant, PlantFamily, Tray, PlantBatch
+from os import path
 
 
 def get_trays(db_path: str) -> List[Tray]:
@@ -17,7 +18,8 @@ def get_trays(db_path: str) -> List[Tray]:
         trays (List[Tray]): Array of all the trays in the database
     """
     trays: List[Tray] = []
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
+
     cur: Cursor = conn.cursor()
     for row in cur.execute('SELECT tray_type, footprint, capacity FROM tray_types'):
         trays.append(Tray(row[0], row[1], row[2]))
@@ -37,7 +39,7 @@ def add_tray(db_path: str, tray: Tray) -> None:
     """
     query = f'INSERT INTO tray_types (tray_type, capacity, footprint) VALUES ("{tray.tray_type}", {tray.capacity}, {tray.footprint})'
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(query)
@@ -61,7 +63,7 @@ def delete_tray(db_path: str, tray: Tray):
     # we can filter on the specific name
     query = f"DELETE FROM tray_types WHERE tray_type='{tray.tray_type}'"
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(query)
@@ -83,7 +85,7 @@ def get_locations(db_path: str) -> List[Location]:
         locations (List[Location]): list of all the locations in the database
     """
     locations: List[Location] = []
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     cur: Cursor = conn.cursor()
     for row in cur.execute('SELECT name, area, climate FROM locations'):
         locations.append(Location(row[0], row[1], Climate(row[2])))
@@ -103,7 +105,7 @@ def add_location(db_path: str, location: Location) -> None:
     """
     query = f'INSERT INTO locations (name, area, climate) VALUES ("{location.name}", {location.area}, {location.climate.climate_type})'
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(query)
@@ -127,7 +129,7 @@ def delete_location(db_path: str, location: Location):
     # we can filter on the specific name
     query = f"DELETE FROM locations WHERE name='{location.name}'"
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(query)
@@ -149,7 +151,7 @@ def get_plant_families(db_path: str) -> List[PlantFamily]:
         plant_families (List[PlantFamily]): list of plant_families in database
     """
     families: List[PlantFamily] = []
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     cur: Cursor = conn.cursor()
     for row in cur.execute('SELECT family_name, meta_data FROM plant_families'):
         families.append(PlantFamily(row[0], dict(eval(row[1]))))
@@ -169,7 +171,7 @@ def add_plant_family(db_path: str, plant_family: PlantFamily) -> None:
     """
     query = f'INSERT INTO plant_families (family_name, meta_data) VALUES ("{plant_family.family_name}", "{str(plant_family.metadata)}")'
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(query)
@@ -193,7 +195,7 @@ def delete_plant_family(db_path: str, plant_family: PlantFamily):
     # we can filter on the specific name
     query = f"DELETE FROM plant_families WHERE family_name='{plant_family.family_name}'"
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(query)
@@ -215,7 +217,7 @@ def get_plants(db_path: str) -> List[Plant]:
         plants (List[Plant]): list of plants in database
     """
     plants: List[Plant] = []
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     cur: Cursor = conn.cursor()
     for row in cur.execute('SELECT family_name, metadata, name FROM plants'):
         plants.append(Plant(row[0], dict(eval(row[1])), row[2]))
@@ -235,7 +237,7 @@ def add_plant(db_path: str, plant: Plant) -> None:
     """
     query = f'INSERT INTO plants (name, family_name, metadata) VALUES ("{str(plant.name)}", "{str(plant.family_name)}", "{str(plant.metadata)}")'
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(query)
@@ -259,7 +261,7 @@ def delete_plant(db_path: str, plant: Plant) -> None:
     # we can filter on the specific name
     query = f"DELETE FROM plants WHERE name='{plant.name}'"
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(query)
@@ -281,7 +283,7 @@ def get_plants(db_path: str) -> List[Plant]:
         plants (List[Plant]): list of plants in database
     """
     plants: List[Plant] = []
-    conn: Connection = sqlite3.connect(f'{db_path}\\company_data.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'company_data.db'))
     cur: Cursor = conn.cursor()
     for row in cur.execute('SELECT family_name, metadata, name FROM plants'):
         plants.append(Plant(row[0], dict(eval(row[1])), row[2]))
@@ -359,7 +361,7 @@ def add_plant_batch(db_path: str, plant_batch: PlantBatch) -> None:
 
     query = f'INSERT INTO batches (Plant, Location, Tray, n_trays, planting_time) VALUES ("{plant}", "{location}", "{tray}", {plant_batch.n_tray}, "{plant_batch.planting_time.isoformat()}")'
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\batches.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'batches.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(query)
@@ -381,7 +383,7 @@ def delete_plant_batch(db_path: str, plant_batch: PlantBatch) -> None:
     """
     plant, location, tray = parse_plant_location_tray_to_dict(plant_batch)
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\batches.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'batches.db'))
     curr: Cursor = conn.cursor()
     try:
         curr.execute(f"DELETE FROM batches WHERE (Plant=? AND Tray=? AND Location=? AND planting_time=?)", (str(plant), str(tray), str(location), plant_batch.planting_time.isoformat(),))
@@ -404,7 +406,7 @@ def get_plant_batches(db_path: str) -> List[PlantBatch]:
     """
     plant_batches: List[PlantBatch] = []
 
-    conn: Connection = sqlite3.connect(f'{db_path}\\batches.db')
+    conn: Connection = sqlite3.connect(path.join(db_path, 'batches.db'))
     cur: Cursor = conn.cursor()
 
     for row in cur.execute('SELECT Plant, Location, Tray, n_trays, planting_time FROM batches'):
@@ -433,7 +435,7 @@ def get_db_count(db_path: str, db_name: str, db_table: str) -> int:
         db_count (int): Number of rows in the table
 
     """
-    conn: Connection = sqlite3.connect(f'{db_path}\\{db_name}')
+    conn: Connection = sqlite3.connect(path.join(db_path, db_name))
     cur: Cursor = conn.cursor()
 
     try:
