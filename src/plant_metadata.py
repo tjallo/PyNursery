@@ -1,8 +1,4 @@
 from dataclasses import dataclass
-from typing import List
-
-from PyQt5 import QtCore
-from starlette.routing import Mount
 from src.utils import is_valid_name
 from datetime import datetime
 
@@ -218,4 +214,4 @@ class PlantBatch:
         """
         Returns unix epoch (in seconds) of the timestamp
         """
-        return self.planting_time.second 
+        return self.planting_time.second

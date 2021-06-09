@@ -5,7 +5,6 @@ import sqlite3
 from sqlite3.dbapi2 import Connection, Cursor
 from typing import List
 from src.plant_metadata import Climate, Location, Plant, PlantFamily, Tray, PlantBatch
-from ast import literal_eval
 
 
 def get_trays(db_path: str) -> List[Tray]:
@@ -318,6 +317,16 @@ def parse_batch_db_entry(row) -> PlantBatch:
 
 
 def parse_plant_location_tray_to_dict(plant_batch: PlantBatch):
+    """
+    Splits and parses PlantBatch object to Plant, Location and Tray objects
+
+    Args:
+        plant_batch (PlantBatch): plant_batch to be converted
+    Returns:
+        plant (Plant): plant information from plant_batch
+        location (Location): location information from plant_batch
+        tray (Tray): tray information from plant_batch
+    """
     plant: dict = {
         'name': plant_batch.plant.name,
         'family_name': plant_batch.plant.family_name,
