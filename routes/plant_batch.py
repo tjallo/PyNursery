@@ -5,6 +5,7 @@ from src.plant_metadata import PlantBatch, Plant, Location, Tray
 from src.db_interface import add_plant_batch, delete_plant_batch, get_plant_batches
 from src.utils import get_db_path
 from datetime import datetime
+import traceback
 
 
 router = APIRouter(
@@ -54,7 +55,8 @@ async def post_plant_batch(plant_batch: PlantBatchModel):
     try:
         add_plant_batch(get_db_path(), plant_batch.toPlantBatch())
         return status.HTTP_201_CREATED
-    except:
+    except :
+        traceback.print_exc()
         return status.HTTP_405_METHOD_NOT_ALLOWED
 
 

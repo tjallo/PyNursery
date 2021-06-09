@@ -4,7 +4,7 @@
       v-model="selected"
       :headers="headers"
       :items="batches"
-      item-key="Plant"
+      item-key="planting_time"
       show-select
       class="elevation-1"
     >
@@ -33,9 +33,12 @@
         }}</v-card-text> -->
         <v-list-item>
           <v-list-item-content v-for="item in selected" :key="item">
-            <v-list-item-title class="blueText">{{
-              item.name
-            }}</v-list-item-title>
+            <v-list-item-title class="blueText"
+              >{{ item.plant.family_name }} {{ item.plant.name }} -
+              {{ item.n_tray }} x {{ item.tray_type.tray_type }} -
+              {{ item.location.name }} -
+              {{ item.planting_time }}</v-list-item-title
+            >
           </v-list-item-content>
         </v-list-item>
         <v-card-actions>
@@ -168,7 +171,10 @@ export default {
     closeAdd() {
       this.dialogAdd = false;
     },
-    deleteItemConfirm() {},
+    deleteItemConfirm() {
+      this.closeDelete();
+      this.deleteBatch();
+    },
     addConfirm() {
       this.closeAdd();
       this.addBatch(this.form);
@@ -209,7 +215,32 @@ export default {
           location.reload();
         });
     },
-    // deleteBatch(input_data) {},
+    deleteBatch() {
+      const query = {
+        plant_batches: [],
+      };
+      console.log(query);
+      for (const i of this.selected) {
+        console.log(i);
+
+        let body = {
+          plant: i.plant,
+          location: i.location,
+          tray_type: i.tray_type,
+          n_trays: i.n_tray,
+          planting_time: i.planting_time,
+        };
+
+        query.plant_batches.push(body);
+      }
+
+      axios
+        .post("http://127.0.0.1:8000/plant_batch/delete", query)
+        .then((response) => {
+          console.log(response);
+          location.reload();
+        });
+    },
   },
   mounted() {
     axios

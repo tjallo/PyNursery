@@ -301,6 +301,7 @@ def parse_batch_db_entry(row) -> PlantBatch:
     """
 
     # We need to reassign to a new variable since dicts are immutable
+    print(row)
     row0 = ast.literal_eval(row[0])
     row1 = ast.literal_eval(row[1])
     row2 = ast.literal_eval(row[2])
