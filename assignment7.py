@@ -18,6 +18,7 @@ def main():
 
 
     print(f"Installing requirements...")
+    os.system("pip install fastapi[all]")
     os.system("pip install -r requirements.txt")
 
 
