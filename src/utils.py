@@ -1,5 +1,6 @@
 import re
 import json
+from os import path
 
 
 def is_valid_name(name: str) -> bool:
@@ -33,7 +34,7 @@ def set_db_path(cwd: str) -> None:
         cwd (str): root directory of PyNursery repo
     """
 
-    act_path = f"{cwd}\\db"
+    act_path = path.join(cwd, 'db')
 
     try:
         with open('./config/settings.json', 'r') as file:
