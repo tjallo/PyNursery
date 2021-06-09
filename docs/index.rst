@@ -52,6 +52,12 @@ This should work almost immeaditely, if everything has gone well, there data sho
 
    Here you can also find all the information regarding expected input and expected output of the API when calling it.
 
+main
+=====================================
+.. automodule:: assignment7
+   :members:   
+   
+
 api
 =====================================
 .. automodule:: api
