@@ -1,9 +1,14 @@
 import os
+from src.utils import set_db_path
 
-print(f"Current directory: {os.getcwd()}")
+cwd = os.getcwd()
+print(f"Current directory: {cwd}")
+print(f"Setting db-path")
+set_db_path(cwd)
+
+
 
 print(f"Installing requirements...")
-
 os.system("pip install -r requirements.txt")
 
 
@@ -21,4 +26,3 @@ TO START (OPTIONAL) FRONT-END SERVER
 ==================================================
 """)
 os.system("uvicorn api:app --reload")
-
