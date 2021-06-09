@@ -1,6 +1,5 @@
 import ast
 from datetime import datetime
-from json import loads
 import sqlite3
 from sqlite3.dbapi2 import Connection, Cursor
 from typing import List
