@@ -1,0 +1,136 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{url}
+
+\title{PyNursery User Documentation}
+\author{Tjalle Wolterink}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\section{Introduction}
+PyNursery is aimed at companies that run a Plant Nursery. It is a tool that can help in keeping track of your companies inventory regarding all your plants, plant families, on-property locations, and tray types that you can produce.\\\\
+It aims to tackle day-to-day problems within your company, PyNursery can be a replacement for all your paper-based logging regarding plants and their location. It also gives the possibility to quickly search and filter between all your information, saving you precious time!\\\\
+PyNursery is in essence an Python\footnote{Python 3.8.7 and upwards} based Web-API, which enables developers to built their own fully fledged interface, but is included with a basic web-based front-end which enables the user to get up and running in a graphical way, from the get go!
+
+\section{Installation}
+In the future we would like to give the option for you to hire a full-stack server from us, removing all complications involved in the setup process and maintenance of your database! But for now you still need to host the front- and back-end server yourself.\\\\
+When it comes to running PyNursery, you have two options:
+\begin{enumerate}
+    \item Running the Python based Web-API, to built your own integration on our platform. This give you full flexibility to build out on our API, but it doesn't include an interface.
+    \item Running our included NodeJS based front-end in conjunction with the Web-API. Which allows you to have a user interface right away and start using a product.
+\end{enumerate}
+
+\subsection{Prerequisites}
+We assume you have to following installed already:
+\begin{itemize}
+    \item Git $\rightarrow$  \url{https://git-scm.com/downloads}
+    \item Python $>= 3.8.7 \rightarrow$ \url{https://www.python.org/downloads/}
+    \item PIP $>=21.1.2$ (Included with the Python Installation)
+    \item Node.js $>= 14.15.4 \rightarrow$ \url{https://nodejs.org/en/download/} (Only required if you want to run the front-end)
+    \item NPM $>= 6.14.10$ (Included with Node.js, only required if you want to run the front-end)
+\end{itemize}
+\textbf{A video version of this tutorial can be found here: }\\
+\url{https://www.youtube.com/watch?v=fygps4N-SHw}
+
+\subsection{Step 1: Getting the files}
+You first need to get the source files to be able to run the program. In your terminal of choice, go to the folder you want to store your files in, and run the git clone command, and cd into your downloaded folder as follows:
+\begin{verbatim}
+    git clone https://github.com/tjallo/PyNursery.git
+    cd PyNursery
+\end{verbatim}
+Now you need to edit the \url{DB-PATH} variable in the \url{config.json} file to your database path. An example is already provided, but change this to your path.
+
+\subsection{Step 2: Installing the Python requirements}
+Next, we need to install the Python requirements. Whilst still in the PyNursery root folder, run the following command to install all the needed requirements:
+\begin{verbatim}
+    pip install -r requirements.txt
+\end{verbatim}
+
+\subsection{Step 3: Installing the Node.js requirements}
+Following this we can install the Node.js requirements. For this we first need to cd into the front-end folder of the repository and run the follwing command\footnote{There is a possibility that at the end of the installation NPM will produce a message like this: found X vulnerabilities (X moderate, X high), this can be due to some packages being out of date, but shouldn't be a problem, as long as you keep running this site on your local network only}:
+\begin{verbatim}
+    cd frontend
+    npm i .
+\end{verbatim}
+This will take a while, since NPM has to grab all the required repositories, but once this is done downloading, we should have all requirements installed!
+
+\section{Starting and Running the software}
+\begin{center}
+    \textbf{!! MAKE SURE YOU HAVE FOLLOWED THE INSTALLATION INSTRUCTIONS FIRST !!}
+\end{center}
+\textbf{A video version of this part of the tutorial can be found here:}\\
+\url{https://www.youtube.com/watch?v=cforcuGqDIE}
+
+\subsection{Starting the Web-API}
+Open your terminal in the root folder of the PyNursery repository and run the following command:
+\begin{verbatim}
+     uvicorn api:app --reload
+\end{verbatim}
+This will use uvicorn (ASGI Server) to run our API web server.\\\\
+If everything went alright, you can now visit the documentation of the Web-API on the following site: \url{http://127.0.0.1:8000/docs} (or if you would like an alternate documentation style: \url{http://127.0.0.1:8000/redoc}).\\
+Here you can find all the API endpoints, including a description of each endpoint, what data the endpoints expect, and what data the endpoints will return.
+
+\subsection{(Optional) Starting the front-end}
+First off, make sure that Web-API server is already running. Then go to the root of the PyNursery repository with your preferred terminal.\\
+When in the root of the project, cd into the frontend folder and run the following command:
+\begin{verbatim}
+    cd frontend
+    npm run serve
+\end{verbatim}
+Congratulations, you have now succesfully started the front and back-end of PyNursery. You can acces the front-end at: \url{http://localhost:8080/}.
+\newpage
+\section{Using the Web-API}
+\begin{center}
+    \textbf{This section meant is for developers only, it is recommended that you are very familier with REST\footnote{\url{https://en.wikipedia.org/wiki/Representational_state_transfer}} API's, for more information, read the actual developer docs.}
+\end{center}
+
+\subsection{Endpoints}
+Once you have the API-server up and running you can find the endpoints, their documentation, expected input and expected output at \url{http://127.0.0.1:8000/docs}.\\\\
+To understand the expected in/outputs of the API it is recommended to play around with the 'Try it out' button in the documentation.\\\\
+For the locations, plant\_families, plants, tray\_types, and plant\_batch endpoints we have the same 3 functions: all, add, and delete. On top of this we have the statistics endpoint.
+
+\subsubsection{/all}
+The all endpoint returns an array with all entries of a certain table, it makes use of the GET method.
+
+\subsubsection{/add}
+The add endpoint serves as a way to add a single element to a table, it uses the POST method. To see the specific query needed for each endpoint, reference the API documentation.
+
+\subsubsection{/delete}
+The delete method serves as a way to delete an array of elements from a certain table, it uses the POST method. To see the specific query needed for each endpoint, reference the API documentation.
+
+\subsubsection{/statistics}
+The statistics endpoints are meant for retrieving the number of rows each table has, it uses the GET method. 
+
+\section{Using the included front-end}
+\subsection{Home}
+The home page shows the global stats of your company, ibid. how much of any type of product you have stored in your database.
+
+\subsection{Plant Batches}
+This page actually shows all the Plant Batches you have physically located in your company. It shows which plant, how many trays, how much plants fit in each tray, the location of the trays, and when the plants where planted.\\\\
+You can sort on a certain category by clicking on the header titles of the table. You can select Plant Batches on the left using the check boxes, and remove the selected Plant Batches using the big red delete selection button at the bottom of the page.\\\\
+You can add items by using the green add item button at the bottom left of the page, filling in the form accordingly and pressing the green add button.
+
+\subsection{Locations}
+The locations tab is meant for all the information regarding your greenhouses, hoop houses and fields. You can store information like the climate of the location and the area (in $m^2$) of the locations.\\\\
+The location tabs also supplies all the possible options for the Locations selector in the Plant Batches add form.\\\\
+You can sort on a certain category by clicking on the header titles of the table.\\ You can select Locations on the left using the check boxes, and remove the selected Locations using the big red delete selection button at the bottom of the page.\\\\
+You can add locations by using the green add item button at the bottom left of the page, filling in the form accordingly and pressing the green add button.
+
+\subsection{Plant Families}
+The plant families tab serves as a way to keep track of all the plant families that your company has farmed, or will farm in the future. So it isn't linked to the actual plants you have in stock right now. Its purpose is to keep track internally of which plant families you can possibly produce in the future.\\\\
+The add, delete and sort functions work in the same manner as the aforementioned tabs.
+
+\subsection{Plants}
+Just like the Plant Families tab, the Plants tab serves as a way to keep track of your internal production capabilities. In addition to the plant families section, it can also store specific plants.\\\\
+The add, delete and sort functions work in the same manner as the aforementioned tabs.
+
+\subsection{Trays}
+The trays tab stores which trays you use in your company. It stores the footprint of a tray (in $m^2$), the plant capacity a tray has, and the tray type name. Just like the locations, the trays are used in the Plant Batch selection form to specify a type of tray for the plant batch you are entering.\\\\
+The add, delete and sort functions work in the same manner as the aforementioned tabs.
+
+\end{document}
