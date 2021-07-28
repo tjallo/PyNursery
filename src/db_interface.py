@@ -50,6 +50,11 @@ def add_tray(db_path: str, tray: Tray) -> None:
     curr.close()
     conn.close()
 
+"""
+
+TODO: Fix the queries, (blind) SQL injection is still possible.
+
+"""
 
 def delete_tray(db_path: str, tray: Tray):
     """
